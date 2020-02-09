@@ -77,6 +77,8 @@ public class Person extends Point {
 
     int infectedTime = 0;//感染时刻
     int confirmedTime = 0;//确诊时刻
+    int dieMoment = 0;//死亡时刻，为0代表未确定
+
 
     public boolean isInfected() {
         return state.compareTo(State.SHADOW) >= 0;
@@ -180,9 +182,11 @@ public class Person extends Point {
         //@TODO找时间改为状态机
 
         if (state == State.DEATH) {
+            // 在医院内死亡
             if (Hospital.getInstance().inHospital(getX(), getY())) {
-                setX(-1);
-                setY(-1);
+                // 移出视线
+                setX(-10);
+                setY(-10);
             }
         }
 
@@ -209,7 +213,7 @@ public class Person extends Point {
         }
 
         //处理已经确诊的感染者（即患者）
-        if (state == State.CONFIRMED) {
+        if (state == State.CONFIRMED && dieMoment == 0) {
             
         }
 
@@ -232,11 +236,13 @@ public class Person extends Point {
             }
         }
 
-        float rand = new Random().nextFloat();
         //处理病死者
-        if ((state == State.CONFIRMED || state == State.FREEZE) && rand < Constants.FATALITY_RATE) {
-            state = State.DEATH;//患者死亡
-            Hospital.getInstance().returnBed(useBed);//归还床位
+        if ((state == State.CONFIRMED || state == State.FREEZE) && MyPanel.worldTime >= dieMoment) {
+            float fatal = new Random().nextFloat();
+            if (fatal < Constants.FATALITY_RATE) {
+                state = State.DEATH;//患者死亡
+                Hospital.getInstance().returnBed(useBed);//归还床位
+            }
         }
 
         //增加一个正态分布用于潜伏期内随机发病时间
