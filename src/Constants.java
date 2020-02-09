@@ -12,7 +12,7 @@ public class Constants {
     public static float BROAD_RATE = 0.8f;//传播率
     public static float SHADOW_TIME = 140;//潜伏时间，14天为140
     public static int HOSPITAL_RECEIVE_TIME = 10;//医院收治响应时间
-    public static int BED_COUNT = 100;//医院床位
+    public static int BED_COUNT = 1000;//医院床位
     /**
      * 流动意向平均值，建议调整范围：[-0.99,0.99]
      */
@@ -25,10 +25,10 @@ public class Constants {
      * 城市大小即窗口边界，限制不允许出城
      */
     public static final int CITY_WIDTH = 700;
-    public static final int CITY_HEIGHT = 800;
+    public static final int CITY_HEIGHT = 700;
 
     public static float SAFE_DIST = 2f; // 安全距离
 
-    public static float RECOVERY_RATE = 0.005f; // 治愈率
+    public static float RECOVERY_RATE = 0.001f; // 治愈率
 
 }

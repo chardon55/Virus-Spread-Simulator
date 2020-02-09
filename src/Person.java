@@ -130,8 +130,8 @@ public class Person extends Point {
 
         double length = Math.sqrt(Math.pow(dX, 2) + Math.pow(dY, 2));//与目标点的距离
 
+        //判断是否到达目标点
         if (length < 1) {
-            //判断是否到达目标点
             moveTarget.setArrived(true);
             return;
         }
@@ -147,14 +147,14 @@ public class Person extends Point {
         }
 
         //横向运动边界
-        if (getX() > Constants.CITY_WIDTH || getX() < 0) {
+        if (getX() >= Constants.CITY_WIDTH || getX() <= 0) {
             moveTarget = null;
             if (udX > 0) {
                 udX = -udX;
             }
         }
         //纵向运动边界
-        if (getY() > Constants.CITY_HEIGHT || getY() < 0) {
+        if (getY() >= Constants.CITY_HEIGHT || getY() <= 0) {
             moveTarget = null;
             if (udY > 0) {
                 udY = -udY;
