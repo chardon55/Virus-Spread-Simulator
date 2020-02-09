@@ -33,7 +33,7 @@ public class Person extends Point {
      * @author dy55
      */
     public enum State {
-        NORMAL, SUSPECTED, FREEZE, DEATH, SHADOW, CONFIRMED
+        NORMAL, SUSPECTED, SHADOW, CONFIRMED, FREEZE, DEATH
     }
 
     public Person(City city, int x, int y) {
@@ -187,7 +187,9 @@ public class Person extends Point {
                 // 移出视线
                 setX(-10);
                 setY(-10);
+                // Hospital.getInstance().returnBed(useBed);
             }
+            return;
         }
 
         if (state == State.FREEZE) {
@@ -208,6 +210,8 @@ public class Person extends Point {
                 // 将人放回城市
                 setX(x);
                 setY(y);
+                Hospital.getInstance().returnBed(useBed);
+                useBed = null;
                 PersonPool.RECOVERED++; // 治愈人次增加1
             }
         }
@@ -242,6 +246,7 @@ public class Person extends Point {
             if (fatal < Constants.FATALITY_RATE) {
                 state = State.DEATH;//患者死亡
                 Hospital.getInstance().returnBed(useBed);//归还床位
+                useBed = null;
             }
         }
 
@@ -256,18 +261,16 @@ public class Person extends Point {
         action();
         //处理健康人被感染的问题
         List<Person> people = PersonPool.getInstance().personList;
-        if (state.compareTo(State.SHADOW) >= 0) {
-            return;
-        }
-
-        for (Person person : people) {
-            if (person.getState() == State.NORMAL) {
-                continue;
-            }
-            float random = new Random().nextFloat();
-            if (random < Constants.BROAD_RATE && distance(person) < SAFE_DIST && !Hospital.getInstance().inHospital(getX(), getY())) {
-                this.beInfected();
-                break;
+        if (state == State.NORMAL && !Hospital.getInstance().inHospital(getX(), getY())) {
+            for (Person person : people) {
+                if (person.getState() != State.SHADOW && person.getState() != State.CONFIRMED) {
+                    continue;
+                }
+                float random = new Random().nextFloat();
+                if (random < Constants.BROAD_RATE && distance(person) < SAFE_DIST) {
+                    this.beInfected();
+                    break;
+                }
             }
         }
     }

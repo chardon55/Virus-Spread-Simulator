@@ -12,7 +12,7 @@ public class Constants {
     public static float BROAD_RATE = 0.8f;//传播率
     public static float SHADOW_TIME = 140;//潜伏时间，14天为140
     public static int HOSPITAL_RECEIVE_TIME = 10;//医院收治响应时间
-    public static int BED_COUNT = 200;//医院床位
+    public static int BED_COUNT = 100;//医院床位
     /**
      * 流动意向平均值，建议调整范围：[-0.99,0.99]
      */
@@ -29,6 +29,6 @@ public class Constants {
 
     public static float SAFE_DIST = 2f; // 安全距离
 
-    public static float RECOVERY_RATE = 0.0004f; // 治愈率
+    public static float RECOVERY_RATE = 0.005f; // 治愈率
 
 }

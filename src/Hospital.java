@@ -86,11 +86,10 @@ public class Hospital extends Point {
      * @param bed
      * @return
      */
-    public Bed returnBed(Bed bed) {
+    public void returnBed(Bed bed) {
         if (bed != null) {
             bed.setEmpty(true);
         }
-        return bed;
     }
 
     public boolean inHospital(int x, int y) {
