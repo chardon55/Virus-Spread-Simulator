@@ -102,7 +102,7 @@ public class MyPanel extends JPanel implements Runnable {
         int needBeds = PersonPool.getInstance().getPeopleSize(Person.State.CONFIRMED)
                 - PersonPool.getInstance().getPeopleSize(Person.State.FREEZE);
 
-        g.drawString("重症患者：" + (needBeds > 0 ? needBeds : 0), captionStartOffsetX, captionStartOffsetY + 7 * captionSize);
+        g.drawString("需要病床：" + (needBeds > 0 ? needBeds : 0), captionStartOffsetX, captionStartOffsetY + 7 * captionSize);
         g.setColor(new Color(0xccbbcc));
         g.drawString("死亡人数：" + PersonPool.getInstance().getPeopleSize(Person.State.DEATH), captionStartOffsetX, captionStartOffsetY + 8 * captionSize);
         g.setColor(new Color(0x00ff23));

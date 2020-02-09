@@ -33,7 +33,7 @@ public class Person extends Point {
      * @author dy55
      */
     public enum State {
-        NORMAL, SUSPECTED, SHADOW, CONFIRMED, FREEZE, DEATH
+        NORMAL, SUSPECTED, FREEZE, DEATH, SHADOW, CONFIRMED
     }
 
     public Person(City city, int x, int y) {
