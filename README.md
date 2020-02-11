@@ -24,6 +24,10 @@ Kotlin edition source is from [cnctemaR/VirusBroadcast](https://github.com/cncte
 
 Specially thank Bruce Young and his "Ele shiyanshi" (Hungry Lab) for releasing such an educative program.
 
+C#源代码正在开发中。
+
+The C# source is under construction.
+
 [原始视频链接 Original Video Link](https://www.bilibili.com/video/av86478875?spm_id_from=333.5.b_6c6966655f6461696c79.18)
 
 |||
