@@ -85,7 +85,8 @@ public class MyPanel extends JPanel implements Runnable {
         g.setColor(Color.WHITE);
         g.setColor(new Color(0xffffff));
         g.drawString("世界时间（天）：" + (int) (worldTime / 10.0), captionStartOffsetX, captionStartOffsetY);
-        g.drawString("城市总人数：" + Constants.POPULATION, captionStartOffsetX, captionStartOffsetY + captionSize);
+        int toll = PersonPool.getInstance().getPeopleSize(Person.State.DEATH);
+        g.drawString("城市总人数：" + (Constants.POPULATION - toll), captionStartOffsetX, captionStartOffsetY + captionSize);
         g.setColor(new Color(0xdddddd));
         g.drawString("健康者人数：" + PersonPool.getInstance().getPeopleSize(Person.State.NORMAL), captionStartOffsetX,
                 captionStartOffsetY + 2 * captionSize);
@@ -113,7 +114,7 @@ public class MyPanel extends JPanel implements Runnable {
         g.drawString("需要病床：" + (needBeds > 0 ? needBeds : 0), captionStartOffsetX,
                 captionStartOffsetY + 7 * captionSize);
         g.setColor(new Color(0xccbbcc));
-        g.drawString("死亡人数：" + PersonPool.getInstance().getPeopleSize(Person.State.DEATH), captionStartOffsetX,
+        g.drawString("死亡人数：" + toll, captionStartOffsetX,
                 captionStartOffsetY + 8 * captionSize);
         g.setColor(new Color(0x00ff23));
         g.drawString("治愈人次：" + PersonPool.RECOVERED, captionStartOffsetX, captionStartOffsetY + 9 * captionSize);

@@ -81,7 +81,8 @@ public class MyPanel extends JPanel implements Runnable {
         g.setColor(Color.WHITE);
         g.setColor(new Color(0xffffff));
         g.drawString("World Time (day): " + (int) (worldTime / 10.0), captionStartOffsetX, captionStartOffsetY);
-        g.drawString("Population: " + Constants.POPULATION, captionStartOffsetX, captionStartOffsetY + captionSize);
+        int toll = PersonPool.getInstance().getPeopleSize(Person.State.DEATH);
+        g.drawString("Population: " + (Constants.POPULATION - toll), captionStartOffsetX, captionStartOffsetY + captionSize);
         g.setColor(new Color(0xdddddd));
         g.drawString("Healthy: " + PersonPool.getInstance().getPeopleSize(Person.State.NORMAL), captionStartOffsetX,
                 captionStartOffsetY + 2 * captionSize);
@@ -109,7 +110,7 @@ public class MyPanel extends JPanel implements Runnable {
         g.drawString("Beds Needed: " + (needBeds > 0 ? needBeds : 0), captionStartOffsetX,
                 captionStartOffsetY + 7 * captionSize);
         g.setColor(new Color(0xccbbcc));
-        g.drawString("Death Toll: " + PersonPool.getInstance().getPeopleSize(Person.State.DEATH), captionStartOffsetX,
+        g.drawString("Death Toll: " + toll, captionStartOffsetX,
                 captionStartOffsetY + 8 * captionSize);
         // One person may be cured many times, which are all recorded
         g.setColor(new Color(0x00ff23));

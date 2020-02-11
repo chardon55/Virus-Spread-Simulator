@@ -276,9 +276,9 @@ public class Person extends Point {
                     continue;
                 }
                 float random = new Random().nextFloat();
-                if (random < Constants.BROAD_RATE && distance(person) < SAFE_DIST) {
+                if (random < Constants.BROAD_RATE && distance(person) < SAFE_DIST && person != this) {
                     this.beInfected();
-                    break;
+                    // break;
                 }
             }
         }

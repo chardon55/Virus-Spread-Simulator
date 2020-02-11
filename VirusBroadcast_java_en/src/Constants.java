@@ -25,5 +25,5 @@ public class Constants {
 
     public static float SAFE_DIST = 2f; // Safe Distance
 
-    public static float RECOVERY_RATE = 0.003f; // Recovery Rate
+    public static float RECOVERY_RATE = 0.004f; // Recovery Rate
 }

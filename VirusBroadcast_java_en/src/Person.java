@@ -111,8 +111,8 @@ public class Person extends Point {
         }
         // Start move if there is flow inclination which under normal distribution
         if (moveTarget == null || moveTarget.isArrived()) {
-            //在想要移动并且没有目标时，将自身移动目标设置为随机生成的符合正态分布的目标点
-            //产生N(a,b)的数：Math.sqrt(b)*random.nextGaussian()+a
+            // Set point under normal distribution if no destination
+            //N(a,b)：Math.sqrt(b)*random.nextGaussian()+a
             double targetX = MathUtil.stdGaussian(targetSig, targetXU);
             double targetY = MathUtil.stdGaussian(targetSig, targetYU);
             moveTarget = new MoveTarget((int) targetX, (int) targetY);
@@ -273,9 +273,9 @@ public class Person extends Point {
                     continue;
                 }
                 float random = new Random().nextFloat();
-                if (random < Constants.BROAD_RATE && distance(person) < SAFE_DIST) {
+                if (random < Constants.BROAD_RATE && distance(person) < SAFE_DIST && person != this) {
                     this.beInfected();
-                    break;
+                    // break;
                 }
             }
         }
