@@ -12,13 +12,18 @@ namespace VirusBroadcast {
 
 		public int Height { get; } = 600;
 
-		private Point point = new Point(800, 100);
+		private Point point = new Point(HOSPITAL_X, HOSPITAL_Y);
 
 		private List<Bed> beds = new List<Bed>();
 
 		public static Hospital Instance { get; } = new Hospital();
 
-		private Hospital() : base(HOSPITAL_X, HOSPITAL_Y) {
+		private Hospital() : base(HOSPITAL_X, HOSPITAL_Y + 10) {
+			if (Constants.BED_COUNT == 0) {
+				Width = 0;
+				Height = 0;
+			}
+
 			var column = Constants.BED_COUNT / 100;
 			Width = column * 6;
 
@@ -43,6 +48,10 @@ namespace VirusBroadcast {
 				bed.IsEmpty = true;
 			}
 			return bed;
+		}
+
+		public bool InHospital(int x, int y) {
+			return x >= HOSPITAL_X && x <= HOSPITAL_X + Width && y >= HOSPITAL_Y && y <= HOSPITAL_Y + Height;
 		}
 	}
 }

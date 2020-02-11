@@ -1,3 +1,6 @@
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
 /**
@@ -8,6 +11,41 @@ import java.util.regex.Pattern;
 public class ArgSolver {
 
 	private static int cursor = 0;
+
+	private static Map<String, Consumer<String[]>> actionMap = new HashMap<>();
+
+	static {
+		// 初始感染数量
+		actionMap.put("-o", e -> Constants.ORIGINAL_COUNT = Integer.valueOf(e[++cursor]));
+		actionMap.put("--original", actionMap.get("-o"));
+		// 传播率
+		actionMap.put("-b", e -> Constants.BROAD_RATE = Float.valueOf(e[++cursor]));
+		actionMap.put("--broad-rate", actionMap.get("-b"));
+		// 潜伏时间
+		actionMap.put("-s", e -> Constants.SHADOW_TIME = Float.valueOf(e[++cursor]));
+		actionMap.put("--shadow", actionMap.get("-s"));
+		// 医院收治时间
+		actionMap.put("-r", e -> Constants.HOSPITAL_RECEIVE_TIME = Integer.valueOf(e[++cursor]));
+		actionMap.put("--receive", actionMap.get("-r"));
+		// 床位
+		actionMap.put("-c", e -> Constants.BED_COUNT = Integer.valueOf(e[++cursor]));
+		actionMap.put("--bed-count", actionMap.get("-c"));
+		// 流动意向平均值μ
+		actionMap.put("-m", e -> Constants.u = Float.valueOf(e[++cursor]));
+		actionMap.put("--move-mu", actionMap.get("-m"));
+		// 总人口
+		actionMap.put("-p", e -> Constants.POPULATION = Integer.valueOf(e[++cursor]));
+		actionMap.put("--population", actionMap.get("-p"));
+		// 安全距离
+		actionMap.put("-d", e -> Constants.SAFE_DIST = Float.valueOf(e[++cursor]));
+		actionMap.put("--safe-dist", actionMap.get("-d"));
+		// 帮助
+		actionMap.put("-h", e -> {
+			getHelp();
+			System.exit(0);
+		});
+		actionMap.put("-?", actionMap.get("-h"));
+	}
 
 	/**
 	 * 初始化
@@ -20,66 +58,12 @@ public class ArgSolver {
 				errReport("传入参数错误");
 				System.exit(0);
 			}
-			switch (args[cursor].trim().toLowerCase()) {
-			// 初始感染数量
-			case "-o":
-			case "--original":
-				Constants.ORIGINAL_COUNT = Integer.valueOf(args[++cursor]);
-				break;
 
-			// 传播率
-			case "-b":
-			case "--broad-rate":
-				Constants.BROAD_RATE = Float.valueOf(args[++cursor]);
-				break;
-
-			// 潜伏时间
-			case "-s":
-			case "--shadow":
-				Constants.SHADOW_TIME = Float.valueOf(args[++cursor]);
-				break;
-
-			// 医院收治时间
-			case "-r":
-			case "--receive":
-				Constants.HOSPITAL_RECEIVE_TIME = Integer.valueOf(args[++cursor]);
-				break;
-
-			// 床位
-			case "-c":
-			case "--bed-count":
-				Constants.BED_COUNT = Integer.valueOf(args[++cursor]);
-				break;
-
-			// 流动意向平均值μ
-			case "-m":
-			case "--move-u":
-				Constants.u = Float.valueOf(args[++cursor]);
-				break;
-
-			// 总人口
-			case "-p":
-			case "--population":
-				Constants.POPULATION = Integer.valueOf(args[++cursor]);
-				break;
-
-			// 安全距离
-			case "-d":
-			case "--safe-dist":
-				Constants.SAFE_DIST = Float.valueOf(args[++cursor]);
-				break;
-
-			// 其他
-			default:
+			try {
+				actionMap.get(args[cursor].trim().toLowerCase()).accept(args);
+			} catch (NullPointerException e) {
 				errReport("传入参数错误");
-				// 没有Break，直接运行帮助
-
-				// 帮助
-			case "-h":
-			case "-?":
-				getHelp();
 				System.exit(0);
-				break;
 			}
 		}
 
@@ -112,7 +96,7 @@ public class ArgSolver {
 		System.out.println("      -s, --shadow    自定义潜伏时间");
 		System.out.println("     -r, --receive    自定义医院收治时间");
 		System.out.println("   -c, --bed-count    自定义床位");
-		System.out.println("      -m, --move-u    自定义流动意向平均值（-0.99 ~ 0.99）");
+		System.out.println("      -m, --move-mu    自定义流动意向平均值（-0.99 ~ 0.99）");
 		System.out.println("  -p, --population    自定义城市人口（建议在5000左右）");
 		System.out.println("   -d, --safe-dist    自定义安全距离");
 		System.out.println("----------------------------------------------------");

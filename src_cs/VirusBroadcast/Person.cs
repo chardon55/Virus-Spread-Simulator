@@ -22,12 +22,12 @@ namespace VirusBroadcast {
 
 		public Person(City city, int x, int y) : base(x, y) {
 			City = city;
-			targetXU = 100 * new Random().NextGaussian() + x;
-			targetYU = 100 * new Random().NextGaussian() + y;
+			targetXU = new Random().NextGaussian(100, x);
+			targetYU = new Random().NextGaussian(100, y);
 		}
 
 		public bool WantMove() {
-			return new Random().NextGaussian(Constants.MU, SIGMA) > 0;
+			return new Random().NextGaussian(SIGMA, Constants.MU) > 0;
 		}
 
 		public State CurState { get; set; } = State.NORMAL;
@@ -84,14 +84,14 @@ namespace VirusBroadcast {
 				udY = Round(dY);
 			}
 
-			if (X > Constants.CITY_WIDTH || X < 0) {
+			if (X >= Constants.CITY_WIDTH || X <= 0) {
 				moveTarget = null;
 				if(udX > 0) {
 					udX = -udX;
 				}
 			}
 
-			if(Y > Constants.CITY_HEIGHT || Y < 0) {
+			if(Y >= Constants.CITY_HEIGHT || Y <= 0) {
 				moveTarget = null;
 				if(udY > 0) {
 					udY = -udY;
@@ -109,22 +109,57 @@ namespace VirusBroadcast {
 
 		public Bed useBed;
 
-		private readonly float SAFE_DIST = Constants.SAFE_DIST;
+		private readonly double SAFE_DIST = Constants.SAFE_DIST;
 
 		public void Update() {
-			
-			if(CurState == State.FREEZE || CurState == State.DEATH) {
+
+			if (CurState == State.DEATH) {
+				if (Hospital.Instance.InHospital(X, Y)) {
+					X = -10;
+					Y = -10;
+				}
 				return;
 			}
 
-			if(CurState == State.CONFIRMED && dieMoment == 0) {
-				int dieTime = (int)new Random().NextGaussian(Constants.DIE_VARIANCE, Constants.DIE_TIME);
-				dieMoment = confirmedTime + dieTime;
+			if (CurState == State.FREEZE) {
+				var success = new Random().NextDouble();
+				if (success < Constants.RECOVERY_RATE) {
+					CurState = State.NORMAL;
+
+					var rand = new Random();
+					int x = (int)rand.NextGaussian(100, City.CenterX);
+					int y = (int)rand.NextGaussian(100, City.CenterY);
+					if (x > Constants.CITY_WIDTH) {
+						x = Constants.CITY_WIDTH;
+					}
+					if (x < -Constants.CITY_WIDTH) {
+						x = -Constants.CITY_WIDTH;
+					}
+					if (y > Constants.CITY_HEIGHT) {
+						y = Constants.CITY_HEIGHT;
+					}
+					if (y < -Constants.CITY_HEIGHT) {
+						y = -Constants.CITY_HEIGHT;
+					}
+
+					X = x;
+					Y = y;
+					Hospital.Instance.LeaveBed(useBed);
+					useBed = null;
+					PersonPool.RECOVERED++;
+				}
 			}
 
-			if(CurState == State.CONFIRMED && BroadcastCanvas.WorldTime - confirmedTime >= Constants.HOSPITAL_RECEIVE_TIME) {
+			if (CurState == State.CONFIRMED && dieMoment == 0) {
+
+			}
+
+			if (CurState == State.CONFIRMED && BroadcastCanvas.WorldTime - confirmedTime >= Constants.HOSPITAL_RECEIVE_TIME) {
 				var bed = Hospital.Instance.PickBed();
-				if(bed != null) {
+				if (bed == null) {
+
+				}
+				else {
 					useBed = bed;
 					Freeze();
 					X = bed.X;
@@ -133,27 +168,33 @@ namespace VirusBroadcast {
 				}
 			}
 
-			if((CurState == State.CONFIRMED || CurState == State.FREEZE) && BroadcastCanvas.WorldTime >= dieMoment) {
-				CurState = State.DEATH;
-				Hospital.Instance.LeaveBed(useBed);
+			if ((CurState == State.CONFIRMED || CurState == State.FREEZE) && BroadcastCanvas.WorldTime >= dieMoment) {
+				var fatal = new Random().NextDouble();
+				if (fatal < Constants.FATALITY_RATE) {
+					CurState = State.DEATH;
+					Hospital.Instance.LeaveBed(useBed);
+					useBed = null;
+				}
 			}
 
 			double stdRnShadowTime = new Random().NextGaussian(25, Constants.SHADOW_TIME / 2);
-			if(BroadcastCanvas.WorldTime - infectedTime > stdRnShadowTime && CurState == State.SHADOW) {
+			if (BroadcastCanvas.WorldTime - infectedTime > stdRnShadowTime && CurState == State.SHADOW) {
 				CurState = State.CONFIRMED;
 				confirmedTime = BroadcastCanvas.WorldTime;
 			}
 			Action();
 			var people = PersonPool.Instance.PersonList;
-			if(CurState == State.SHADOW) {
-				return;
-			}
-
-			foreach(var person in people) {
-				if(person.CurState == State.NORMAL) {
-					continue;
+			if (CurState == State.NORMAL && !Hospital.Instance.InHospital(X, Y)) {
+				foreach (var person in people) {
+					if (person.CurState != State.SHADOW && person.CurState != State.CONFIRMED) {
+						continue;
+					}
+					var rand = new Random().NextDouble();
+					if(rand < Constants.BROAD_RATE && GetDistance(person) < SAFE_DIST) {
+						this.BeInfected();
+						break;
+					}
 				}
-				var rand = new Random()
 			}
 		}
 	}

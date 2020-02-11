@@ -203,8 +203,17 @@ public class Person extends Point {
                 Random random = new Random();
                 int x = (int) (100 * random.nextGaussian() + city.getCenterX());
                 int y = (int) (100 * random.nextGaussian() + city.getCenterY());
-                if (x > 700) {
-                    x = 700;
+                if (x > Constants.CITY_WIDTH) {
+                    x = Constants.CITY_WIDTH;
+                }
+                if (x < -Constants.CITY_WIDTH) {
+                    x = -Constants.CITY_WIDTH;
+                }
+                if (y > Constants.CITY_HEIGHT) {
+                    y = Constants.CITY_HEIGHT;
+                }
+                if (y < -Constants.CITY_HEIGHT) {
+                    y = -Constants.CITY_HEIGHT;
                 }
 
                 // 将人放回城市

@@ -21,15 +21,26 @@ namespace VirusBroadcast {
 
 		public int GetPeopleSize() => PersonList.Count;
 
+		public static int RECOVERED { get; set; } = 0;
+
 		private PersonPool() {
-			var city = new City(400, 400);
+			var city = new City(Constants.CITY_WIDTH, Constants.CITY_HEIGHT);
 			// 添加城市居民
 			for (var i = 0; i < Constants.POPULATION; i++) {
 				var rand = new Random();
 				int x = (int)rand.NextGaussian(100, city.CenterX);
 				int y = (int)rand.NextGaussian(100, city.CenterY);
-				if (x > 700) {
-					x = 700;
+				if (x > Constants.CITY_WIDTH) {
+					x = Constants.CITY_WIDTH;
+				}
+				if (x < -Constants.CITY_WIDTH) {
+					x = -Constants.CITY_WIDTH;
+				}
+				if (y > Constants.CITY_HEIGHT) {
+					y = Constants.CITY_HEIGHT;
+				}
+				if (y < -Constants.CITY_HEIGHT) {
+					y = -Constants.CITY_HEIGHT;
 				}
 				PersonList.Add(new Person(city, x, y));
 			}
