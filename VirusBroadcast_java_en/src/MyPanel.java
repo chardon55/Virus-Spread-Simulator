@@ -89,10 +89,12 @@ public class MyPanel extends JPanel implements Runnable {
         g.drawString("In incubation period: " + PersonPool.getInstance().getPeopleSize(Person.State.SHADOW), captionStartOffsetX,
                 captionStartOffsetY + 3 * captionSize);
         g.setColor(new Color(0xff0000));
-        g.drawString("Sick: " + PersonPool.getInstance().getPeopleSize(Person.State.CONFIRMED), captionStartOffsetX,
+        int sick = PersonPool.getInstance().getPeopleSize(Person.State.CONFIRMED);
+        g.drawString("Sick: " + sick, captionStartOffsetX,
                 captionStartOffsetY + 4 * captionSize);
         g.setColor(new Color(0x48FFFC));
-        g.drawString("Isolated: " + PersonPool.getInstance().getPeopleSize(Person.State.FREEZE), captionStartOffsetX,
+        int isolated = PersonPool.getInstance().getPeopleSize(Person.State.FREEZE);
+        g.drawString("Isolated: " + isolated, captionStartOffsetX,
                 captionStartOffsetY + 5 * captionSize);
         g.setColor(new Color(0x00a1ff));
         g.drawString("Empty Beds: "
@@ -100,10 +102,9 @@ public class MyPanel extends JPanel implements Runnable {
                 captionStartOffsetX, captionStartOffsetY + 6 * captionSize);
 
         g.setColor(new Color(0xE39476));
-        // Beds needed = Sick - Isolated
+        // Beds needed = Sick + Isolated - Beds total
         // 
-        int needBeds = PersonPool.getInstance().getPeopleSize(Person.State.CONFIRMED)
-                - PersonPool.getInstance().getPeopleSize(Person.State.FREEZE);
+        int needBeds = sick + isolated - Constants.BED_COUNT;
 
         g.drawString("Beds Needed: " + (needBeds > 0 ? needBeds : 0), captionStartOffsetX,
                 captionStartOffsetY + 7 * captionSize);

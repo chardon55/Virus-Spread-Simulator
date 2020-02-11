@@ -93,10 +93,12 @@ public class MyPanel extends JPanel implements Runnable {
         g.drawString("潜伏期人数：" + PersonPool.getInstance().getPeopleSize(Person.State.SHADOW), captionStartOffsetX,
                 captionStartOffsetY + 3 * captionSize);
         g.setColor(new Color(0xff0000));
-        g.drawString("发病者人数：" + PersonPool.getInstance().getPeopleSize(Person.State.CONFIRMED), captionStartOffsetX,
+        int sick = PersonPool.getInstance().getPeopleSize(Person.State.CONFIRMED);
+        g.drawString("发病者人数：" + sick, captionStartOffsetX,
                 captionStartOffsetY + 4 * captionSize);
         g.setColor(new Color(0x48FFFC));
-        g.drawString("已隔离人数：" + PersonPool.getInstance().getPeopleSize(Person.State.FREEZE), captionStartOffsetX,
+        int isolated = PersonPool.getInstance().getPeopleSize(Person.State.FREEZE);
+        g.drawString("已隔离人数：" + isolated, captionStartOffsetX,
                 captionStartOffsetY + 5 * captionSize);
         g.setColor(new Color(0x00a1ff));
         g.drawString("空余病床："
@@ -104,10 +106,9 @@ public class MyPanel extends JPanel implements Runnable {
                 captionStartOffsetX, captionStartOffsetY + 6 * captionSize);
 
         g.setColor(new Color(0xE39476));
-        // 暂定急需病床数量为 NEED = 确诊发病者数量 - 已隔离住院数量
+        // 急需病床数量 = 确诊发病者数量 + 已隔离住院数量 - 床位总数
         //
-        int needBeds = PersonPool.getInstance().getPeopleSize(Person.State.CONFIRMED)
-                - PersonPool.getInstance().getPeopleSize(Person.State.FREEZE);
+        int needBeds = sick + isolated - Constants.BED_COUNT;
 
         g.drawString("需要病床：" + (needBeds > 0 ? needBeds : 0), captionStartOffsetX,
                 captionStartOffsetY + 7 * captionSize);
