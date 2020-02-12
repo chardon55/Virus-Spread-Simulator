@@ -111,7 +111,7 @@ public class MyPanel extends JPanel implements Runnable {
         //
         int needBeds = sick + isolated - Constants.BED_COUNT;
 
-        g.drawString("需要病床：" + (needBeds > 0 ? needBeds : 0), captionStartOffsetX,
+        g.drawString("病床缺口：" + (needBeds > 0 ? needBeds : 0), captionStartOffsetX,
                 captionStartOffsetY + 7 * captionSize);
         g.setColor(new Color(0xccbbcc));
         g.drawString("死亡人数：" + toll, captionStartOffsetX,
