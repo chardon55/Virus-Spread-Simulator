@@ -87,7 +87,7 @@ public class MyPanel extends JPanel implements Runnable {
         g.drawString("Healthy: " + PersonPool.getInstance().getPeopleSize(Person.State.NORMAL), captionStartOffsetX,
                 captionStartOffsetY + 2 * captionSize);
         g.setColor(new Color(0xffee00));
-        g.drawString("In incubation period: " + PersonPool.getInstance().getPeopleSize(Person.State.SHADOW), captionStartOffsetX,
+        g.drawString("In Incubation Period: " + PersonPool.getInstance().getPeopleSize(Person.State.SHADOW), captionStartOffsetX,
                 captionStartOffsetY + 3 * captionSize);
         g.setColor(new Color(0xff0000));
         int sick = PersonPool.getInstance().getPeopleSize(Person.State.CONFIRMED);
