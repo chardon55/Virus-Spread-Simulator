@@ -1,5 +1,7 @@
 # 瘟疫传播模拟程序 Plague Spread Simulation Program
 
+<p align="center"><b>武汉加油！中国加油！💪</b>
+
 ## 简介 Introduction
 
 这是由 Bruce Young 制作的用于模拟2019-nCoV传播并在B站上告诫人们要呆在家里的模拟程序。
@@ -16,17 +18,17 @@ Kotlin版源代码来自[cnctemaR/VirusBroadcast](https://github.com/cnctemaR/Vi
 
 Kotlin edition source is from [cnctemaR/VirusBroadcast](https://github.com/cnctemaR/VirusBroadcast)
 
+**English edition is now available.**
 
-**武汉加油！中国加油！💪**
-
+---
 
 特别感谢 Bruce Young 以及他的“Ele实验室”带来如此有教育意义的程序。
 
 Specially thank Bruce Young and his "Ele shiyanshi" (Hungry Lab) for releasing such an educative program.
 
-C#源代码正在开发中。
+C#源代码正在开发中。🛠
 
-The C# source is under construction.
+The C# source is under construction. 🛠
 
 [原始视频链接 Original Video Link](https://www.bilibili.com/video/av86478875?spm_id_from=333.5.b_6c6966655f6461696c79.18)
 
