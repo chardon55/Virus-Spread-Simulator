@@ -37,12 +37,12 @@ namespace VirusBroadcast {
 		private int dieMoment = 0; // 死亡时刻，0表示未知
 
 		public bool IsInfected() {
-			return CurState.CompareTo(State.SHADOW) > 0;
+			return CurState.CompareTo(State.SHADOW) >= 0;
 		}
 
 		public void BeInfected() {
 			CurState = State.SHADOW;
-			infectedTime = BroadcastCanvas.WorldTime;
+			infectedTime = MyPanel.WorldTime;
 		}
 
 		public double GetDistance(Person person) {
@@ -58,7 +58,7 @@ namespace VirusBroadcast {
 				return;
 			}
 
-			if(moveTarget == null || moveTarget.IsArrived) {
+			if(moveTarget is null || moveTarget.IsArrived) {
 				var targetX = new Random().NextGaussian(targetSigma, targetXU);
 				var targetY = new Random().NextGaussian(targetSigma, targetYU);
 				moveTarget = new MoveTarget((int)targetX, (int)targetY);
@@ -154,9 +154,9 @@ namespace VirusBroadcast {
 
 			}
 
-			if (CurState == State.CONFIRMED && BroadcastCanvas.WorldTime - confirmedTime >= Constants.HOSPITAL_RECEIVE_TIME) {
+			if (CurState == State.CONFIRMED && MyPanel.WorldTime - confirmedTime >= Constants.HOSPITAL_RECEIVE_TIME) {
 				var bed = Hospital.Instance.PickBed();
-				if (bed == null) {
+				if (bed is null) {
 
 				}
 				else {
@@ -168,7 +168,7 @@ namespace VirusBroadcast {
 				}
 			}
 
-			if ((CurState == State.CONFIRMED || CurState == State.FREEZE) && BroadcastCanvas.WorldTime >= dieMoment) {
+			if ((CurState == State.CONFIRMED || CurState == State.FREEZE) && MyPanel.WorldTime >= dieMoment) {
 				var fatal = new Random().NextDouble();
 				if (fatal < Constants.FATALITY_RATE) {
 					CurState = State.DEATH;
@@ -178,9 +178,9 @@ namespace VirusBroadcast {
 			}
 
 			double stdRnShadowTime = new Random().NextGaussian(25, Constants.SHADOW_TIME / 2);
-			if (BroadcastCanvas.WorldTime - infectedTime > stdRnShadowTime && CurState == State.SHADOW) {
+			if (MyPanel.WorldTime - infectedTime > stdRnShadowTime && CurState == State.SHADOW) {
 				CurState = State.CONFIRMED;
-				confirmedTime = BroadcastCanvas.WorldTime;
+				confirmedTime = MyPanel.WorldTime;
 			}
 			Action();
 			var people = PersonPool.Instance.PersonList;
@@ -190,9 +190,9 @@ namespace VirusBroadcast {
 						continue;
 					}
 					var rand = new Random().NextDouble();
-					if(rand < Constants.BROAD_RATE && GetDistance(person) < SAFE_DIST) {
-						this.BeInfected();
-						break;
+					if(rand < Constants.BROAD_RATE && GetDistance(person) < SAFE_DIST && person != this) {
+						BeInfected();
+						//break;
 					}
 				}
 			}
