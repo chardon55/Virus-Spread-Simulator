@@ -26,6 +26,6 @@ class MathUtil{
          * @param u     正态均值参数mu
          * @return
          */
-        fun stdGaussian(sigma:Double,u:Double) = sigma*randomGen.nextGaussian()+u
+        fun stdGaussian(sigma:Double,u:Double) = sigma * randomGen.nextGaussian() + u
     }
 }

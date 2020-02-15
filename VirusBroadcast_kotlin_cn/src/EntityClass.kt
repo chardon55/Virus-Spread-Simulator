@@ -41,7 +41,7 @@ class MoveTarget(var x: Int, var y: Int) {
  * @Author: cnctemaR
  * @Date: 2020/2/7 0:12
  * */
-class City(var centerX: Int, var cneterY: Int)
+class City(var centerX: Int, var centerY: Int)
 
 /**
  * @ClassName:
@@ -114,7 +114,7 @@ class PersonPool private constructor() {
         for (i in 0 until Constants.CITY_PERSON_SIZE) {
             val random = Random()
             var x = (100 * random.nextGaussian() + city.centerX).toInt()
-            val y = (100 * random.nextGaussian() + city.cneterY).toInt()
+            val y = (100 * random.nextGaussian() + city.centerY).toInt()
             if (x > 700)
                 x = 700
 
@@ -130,10 +130,12 @@ class PersonPool private constructor() {
      * @param state 市民类型 Person.State的值，若为-1则返回当前总数目
      * @return 获取指定人群数量
      */
-    fun getPeopleSize(state: Int): Int {
-        if (state == -1)
-            return personList.size
+    fun getPeopleSize(state: Person.State): Int {
         return personList.count {it.state == state}
+    }
+
+    fun getPeopleSize(): Int {
+        return personList.size
     }
 
 }

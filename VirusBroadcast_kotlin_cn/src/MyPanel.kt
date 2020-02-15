@@ -1,3 +1,5 @@
+import kotlin.collections.HashMap;
+
 import javax.swing.*
 import java.awt.*
 import java.util.Timer
@@ -35,7 +37,7 @@ class MyPanel : JPanel(), Runnable {
         //绘制医院边界
         g.drawRect(Hospital.hospital.x, Hospital.hospital.y,
                 Hospital.hospital.width, Hospital.hospital.height)
-        g.font = Font("微软雅黑", Font.BOLD, 16)
+        g.font = Font("等线", Font.BOLD, 16)
         g.color = Color(0x00ff00)
         g.drawString("医院", Hospital.hospital.x + Hospital.hospital.width / 4, Hospital.hospital.y - 16)
         //绘制代表人类的圆点
@@ -54,31 +56,48 @@ class MyPanel : JPanel(), Runnable {
         }
 
         val captionStartOffsetX = 700 + Hospital.hospital.width + 40
-        val captionStartOffsetY = 40
+        var captionStartOffsetY = 40
         val captionSize = 24
+        captionStartOffsetY -= captionSize
 
         //显示数据信息
+        g.color = Color(0xffffff)
+        captionStartOffsetY += captionSize
+        g.drawString("世界时间（天）：" + (worldTime / 10.0).toInt(), captionStartOffsetX, captionStartOffsetY)
+
         g.color = Color.WHITE
+        captionStartOffsetY += captionSize
         g.drawString("城市总人数：" + Constants.CITY_PERSON_SIZE, captionStartOffsetX, captionStartOffsetY)
+
         g.color = Color(0xdddddd)
-        g.drawString("健康者人数：" + PersonPool.personPool.getPeopleSize(Person.State.NORMAL), captionStartOffsetX, captionStartOffsetY + captionSize)
+        captionStartOffsetY += captionSize
+        g.drawString("健康者人数：" + PersonPool.personPool.getPeopleSize(Person.State.NORMAL), captionStartOffsetX, captionStartOffsetY)
+
         g.color = Color(0xffee00)
-        g.drawString("潜伏期人数：" + PersonPool.personPool.getPeopleSize(Person.State.SHADOW), captionStartOffsetX, captionStartOffsetY + 2 * captionSize)
+        captionStartOffsetY += captionSize
+        g.drawString("潜伏期人数：" + PersonPool.personPool.getPeopleSize(Person.State.SHADOW), captionStartOffsetX, captionStartOffsetY)
+
         g.color = Color(0xff0000)
-        g.drawString("发病者人数：" + PersonPool.personPool.getPeopleSize(Person.State.CONFIRMED), captionStartOffsetX, captionStartOffsetY + 3 * captionSize)
+        captionStartOffsetY += captionSize
+        g.drawString("发病者人数：" + PersonPool.personPool.getPeopleSize(Person.State.CONFIRMED), captionStartOffsetX, captionStartOffsetY)
+
         g.color = Color(0x48FFFC)
-        g.drawString("已隔离人数：" + PersonPool.personPool.getPeopleSize(Person.State.FREEZE), captionStartOffsetX, captionStartOffsetY + 4 * captionSize)
+        captionStartOffsetY += captionSize
+        g.drawString("已隔离人数：" + PersonPool.personPool.getPeopleSize(Person.State.FREEZE), captionStartOffsetX, captionStartOffsetY)
+
         g.color = Color(0x00ff00)
-        g.drawString("空余病床：" + Math.max(Constants.BED_COUNT - PersonPool.personPool.getPeopleSize(Person.State.FREEZE), 0), captionStartOffsetX, captionStartOffsetY + 5 * captionSize)
+        captionStartOffsetY += captionSize
+        g.drawString("空余病床：" + Math.max(Constants.BED_COUNT - PersonPool.personPool.getPeopleSize(Person.State.FREEZE), 0), captionStartOffsetX, captionStartOffsetY)
+
         g.color = Color(0xE39476)
         //暂定急需病床数量为 NEED = 确诊发病者数量 - 已隔离住院数量
         val needBeds = PersonPool.personPool.getPeopleSize(Person.State.CONFIRMED) - PersonPool.personPool.getPeopleSize(Person.State.FREEZE)
+        captionStartOffsetY += captionSize
+        g.drawString("急需病床：" + if (needBeds > 0) needBeds else 0, captionStartOffsetX, captionStartOffsetY)
 
-        g.drawString("急需病床：" + if (needBeds > 0) needBeds else 0, captionStartOffsetX, captionStartOffsetY + 6 * captionSize)
         g.color = Color(0xccbbcc)
-        g.drawString("病死人数：" + PersonPool.personPool.getPeopleSize(Person.State.DEATH), captionStartOffsetX, captionStartOffsetY + 7 * captionSize)
-        g.color = Color(0xffffff)
-        g.drawString("世界时间（天）：" + (worldTime / 10.0).toInt(), captionStartOffsetX, captionStartOffsetY + 8 * captionSize)
+        captionStartOffsetY += captionSize
+        g.drawString("病死人数：" + PersonPool.personPool.getPeopleSize(Person.State.DEATH), captionStartOffsetX, captionStartOffsetY)
     }
 
 

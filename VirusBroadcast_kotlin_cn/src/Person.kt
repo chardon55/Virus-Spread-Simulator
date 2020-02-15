@@ -1,4 +1,3 @@
-import Person.State.Companion.DEATH
 import java.util.Random
 
 /**
@@ -24,21 +23,10 @@ class Person(private val city: City, override var x: Int, override var y: Int) :
     var state = State.NORMAL
     var infectedTime = 0//感染时刻
     var confirmedTime = 0//确诊时刻
-    var dieMoment = 0//死亡时刻，为0代表未确定，-1代表不会病死
+    var dieMoment = 0//死亡时刻，为0代表未确定
 
-
-    interface State {
-        companion object {
-            const val NORMAL = 0//正常人，未感染的健康人
-            const val SUSPECTED = NORMAL + 1//有暴露感染风险
-            const val SHADOW = SUSPECTED + 1//潜伏期
-            const val CONFIRMED = SHADOW + 1//发病且已确诊为感染病人
-            const val FREEZE = CONFIRMED + 1//隔离治疗，禁止位移
-
-            //已治愈出院的人转为NORMAL即可，否则会与作者通过数值大小判断状态的代码冲突
-            const val DEATH = FREEZE + 1//病死者
-            //int CURED = DEATH + 1;//治愈数量用于计算治愈出院后归还床位数量，该状态是否存续待定
-        }
+    enum class State{
+        NORMAL, SUSPECTED, SHADOW, CONFIRMED, FREEZE, DEATH
     }
 
     /**

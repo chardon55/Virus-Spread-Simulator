@@ -12,6 +12,10 @@ import java.util.Random
 private var hospitalWidth: Int = 0
 
 fun main(args: Array<String>) {
+    initialize()
+}
+
+fun initialize(){
     initHospital()
     initPanel()
     initInfected()
@@ -20,7 +24,7 @@ fun main(args: Array<String>) {
 /**
  * 初始化画布
  */
-fun initPanel(){
+private fun initPanel(){
     val p = MyPanel()
     val panelThread = Thread(p)
     val frame = JFrame()
@@ -30,6 +34,7 @@ fun initPanel(){
     frame.isVisible = true
     frame.title = "瘟疫传播模拟"
     frame.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
+    frame.extendedState = JFrame.MAXIMIZED_BOTH
     panelThread.start()//开启画布线程，即世界线程，接着看代码的下一站可以转MyPanel.java
 
 }
