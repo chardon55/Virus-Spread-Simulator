@@ -1,7 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -82,53 +80,46 @@ public class MyPanel extends JPanel implements Runnable {
         g.setColor(new Color(0xffffff));
         g.drawString("World Time (day): " + (int) (worldTime / 10.0), captionStartOffsetX, captionStartOffsetY);
         int toll = PersonPool.getInstance().getPeopleSize(Person.State.DEATH);
-        g.drawString("Population: " + (Constants.POPULATION - toll), captionStartOffsetX, captionStartOffsetY + captionSize);
+        g.drawString("Population: " + (Constants.POPULATION - toll), captionStartOffsetX,
+                captionStartOffsetY + captionSize);
         g.setColor(new Color(0xdddddd));
         g.drawString("Healthy: " + PersonPool.getInstance().getPeopleSize(Person.State.NORMAL), captionStartOffsetX,
                 captionStartOffsetY + 2 * captionSize);
         g.setColor(new Color(0xffee00));
-        g.drawString("In Incubation Period: " + PersonPool.getInstance().getPeopleSize(Person.State.SHADOW), captionStartOffsetX,
-                captionStartOffsetY + 3 * captionSize);
+        g.drawString("In Incubation Period: " + PersonPool.getInstance().getPeopleSize(Person.State.SHADOW),
+                captionStartOffsetX, captionStartOffsetY + 3 * captionSize);
         g.setColor(new Color(0xff0000));
         int sick = PersonPool.getInstance().getPeopleSize(Person.State.CONFIRMED);
-        g.drawString("Sick: " + sick, captionStartOffsetX,
-                captionStartOffsetY + 4 * captionSize);
+        g.drawString("Sick: " + sick, captionStartOffsetX, captionStartOffsetY + 4 * captionSize);
         g.setColor(new Color(0x48FFFC));
         int isolated = PersonPool.getInstance().getPeopleSize(Person.State.FREEZE);
-        g.drawString("Isolated: " + isolated, captionStartOffsetX,
-                captionStartOffsetY + 5 * captionSize);
+        g.drawString("Isolated: " + isolated, captionStartOffsetX, captionStartOffsetY + 5 * captionSize);
         g.setColor(new Color(0x00a1ff));
-        g.drawString("Empty Beds: "
-                + Math.max(Constants.BED_COUNT - PersonPool.getInstance().getPeopleSize(Person.State.FREEZE), 0),
+        g.drawString(
+                "Empty Beds: " + Math
+                        .max(Constants.BED_COUNT - PersonPool.getInstance().getPeopleSize(Person.State.FREEZE), 0),
                 captionStartOffsetX, captionStartOffsetY + 6 * captionSize);
 
         g.setColor(new Color(0xE39476));
         // Beds needed = Sick + Isolated - Beds total
-        // 
+        //
         int needBeds = sick + isolated - Constants.BED_COUNT;
 
         g.drawString("Bed Gap: " + (needBeds > 0 ? needBeds : 0), captionStartOffsetX,
                 captionStartOffsetY + 7 * captionSize);
         g.setColor(new Color(0xccbbcc));
-        g.drawString("Death Toll: " + toll, captionStartOffsetX,
-                captionStartOffsetY + 8 * captionSize);
+        g.drawString("Death Toll: " + toll, captionStartOffsetX, captionStartOffsetY + 8 * captionSize);
         // One person may be cured many times, which are all recorded
         g.setColor(new Color(0x00ff23));
-        g.drawString("Recovered Person-times: " + PersonPool.RECOVERED, captionStartOffsetX, captionStartOffsetY + 9 * captionSize);
+        g.drawString("Recovered Person-times: " + PersonPool.RECOVERED, captionStartOffsetX,
+                captionStartOffsetY + 9 * captionSize);
 
     }
 
     public static int worldTime = 0;// World Time
     private JButton closeBtn = new JButton("Click to Exit");
     {
-        closeBtn.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
-            }
-
-        });
+        closeBtn.addActionListener(e -> System.exit(0));
         this.add(closeBtn);
         closeBtn.setVisible(false);
         closeBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));

@@ -11,11 +11,15 @@ public class Main {
 
     public static void main(String[] args) {
         ArgSolver.cliInit(args);
+        initialize();
+    }
+
+    protected static void initialize() {
         initHospital();
         initPanel();
         initInfected();
     }
-
+    
     /**
      * Canvas Initialization
      */
