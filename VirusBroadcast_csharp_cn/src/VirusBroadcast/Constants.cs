@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace VirusBroadcast {
-	public class Constants {
-		private Constants() { }
-
+	public static class Constants {
+		
         public static int ORIGINAL_COUNT = 10;//初始感染数量
         public static double BROAD_RATE = 0.8;//传播率
         public static double SHADOW_TIME = 140;//潜伏时间，14天为140
