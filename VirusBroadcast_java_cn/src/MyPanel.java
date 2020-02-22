@@ -130,7 +130,7 @@ public class MyPanel extends JPanel implements Runnable {
 
         g.setColor(new Color(0x00ff23));
         g.drawString("治愈人次：" + PersonPool.RECOVERED, captionStartOffsetX, captionStartOffsetY += captionSize);
-
+        worldTime++;
     }
 
     public static int worldTime = 0;// 世界时间
@@ -147,7 +147,6 @@ public class MyPanel extends JPanel implements Runnable {
         @Override
         public void run() {
             MyPanel.this.repaint();
-            worldTime++;
         }
     }
 
