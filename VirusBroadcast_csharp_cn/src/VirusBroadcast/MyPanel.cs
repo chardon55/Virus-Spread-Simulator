@@ -127,6 +127,7 @@ namespace VirusBroadcast {
 			brush.Color = Color.FromRgb(0, 255, 35);
 			point.Y += captionSize;
 			dc.DrawText(new FormattedText($"治愈人次：{PersonPool.RECOVERED}", cultureInfo, FlowDirection, typeface, 16, brush.Clone(), ppd), point);
+			WorldTime++;
 
 		}
 
@@ -140,7 +141,6 @@ namespace VirusBroadcast {
 			timer.AutoReset = true;
 			timer.Elapsed += (sender, e) => {
 				Dispatcher.Invoke(() => { });
-				WorldTime++;
 			};
 			timer.Start();
 
