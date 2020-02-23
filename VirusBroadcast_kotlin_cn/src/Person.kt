@@ -1,4 +1,6 @@
 import java.util.Random
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 /**
  * @ClassName:
@@ -17,7 +19,7 @@ class Person(private val city: City, override var x: Int, override var y: Int) :
     private var moveTarget: MoveTarget? = null
 
     private val sig = 1 //人群流动意愿影响系数：正态分布方差sigma
-    private val SAFE_DIST = 2.0//安全距离
+    private val SAFE_DIST = Constants.SAFE_DIST//安全距离
     var useBed: Bed? = null
 
     var state = State.NORMAL
@@ -56,7 +58,7 @@ class Person(private val city: City, override var x: Int, override var y: Int) :
     /**
      * 住院
      */
-    private fun freezy() {
+    private fun freeze() {
         state = State.FREEZE
     }
 
@@ -66,17 +68,14 @@ class Person(private val city: City, override var x: Int, override var y: Int) :
      * @param person
      * @return
      */
-    fun distance(person: Person): Double = Math.sqrt(Math.pow((x - person.x).toDouble(), 2.0) + Math.pow((y - person.y).toDouble(), 2.0))
+    fun distance(person: Person): Double = sqrt((x - person.x).toDouble().pow(2.0) + (y - person.y).toDouble().pow(2.0))
 
     /**
      * 不同状态下的单个人实例运动行为
      */
     private fun action() {
-
-        if (state == State.FREEZE || state == State.DEATH) {
-            return //如果处于隔离或者死亡状态，则无法行动
-        }
-        if (!wantMove()) {
+        // 如果处于隔离或死亡状态，或者不想移动，则无法行动
+        if (state == State.FREEZE || state == State.DEATH || !wantMove()) {
             return
         }
         //存在流动意愿的，将进行流动，流动位移仍然遵循标准正态分布
@@ -93,7 +92,7 @@ class Person(private val city: City, override var x: Int, override var y: Int) :
         val dX = moveTarget!!.x - x
         val dY = moveTarget!!.y - y
 
-        val length = Math.sqrt(Math.pow(dX.toDouble(), 2.0) + Math.pow(dY.toDouble(), 2.0))//与目标点的距离
+        val length = sqrt(dX.toDouble().pow(2.0) + dY.toDouble().pow(2.0))//与目标点的距离
 
         if (length < 1) {
             //判断是否到达目标点
@@ -132,45 +131,73 @@ class Person(private val city: City, override var x: Int, override var y: Int) :
      * 对各种状态的人进行不同的处理，更新发布市民健康状态
      */
     fun update() {
-        //@TODO找时间改为状态机
-        if (state == State.FREEZE || state == State.DEATH)
-            return//如果已经隔离或者死亡了，就不需要处理了
+        //@TODO 找时间改为状态机
 
-        //处理已经确诊的感染者（即患者）
-        if (state == State.CONFIRMED && dieMoment == 0) {
-            val dieTime = MathUtil.stdGaussian(Constants.DIE_VARIANCE, Constants.DIE_TIME.toDouble()).toInt()
-            confirmedTime + dieTime//发病后确定死亡时刻
+        if(state == State.FREEZE) {
+            val success: Float = Random().nextFloat()
+            if(success < Constants.RECOVERY_RATE) {
+                state = State.NORMAL
 
+                val rand = Random()
+                var x: Int = (100 * rand.nextGaussian() + city.centerX).toInt()
+                var y: Int = (100 * rand.nextGaussian() + city.centerY).toInt()
+                if (x > Constants.CITY_WIDTH) {
+                    x = Constants.CITY_WIDTH;
+                }
+                if (x < -Constants.CITY_WIDTH) {
+                    x = -Constants.CITY_WIDTH;
+                }
+                if (y > Constants.CITY_HEIGHT) {
+                    y = Constants.CITY_HEIGHT;
+                }
+                if (y < -Constants.CITY_HEIGHT) {
+                    y = -Constants.CITY_HEIGHT;
+                }
+
+                this.x = x;
+                this.y = y;
+                Hospital.hospital.returnBed(useBed)
+                useBed = null
+                PersonPool.personPool.RECOVERED++
+            }
         }
-        //TODO 暂时缺失治愈出院市民的处理。需要确定一个变量用于治愈时长。由于案例太少，暂不加入。
+
 
 
         if (state == State.CONFIRMED && MyPanel.worldTime - confirmedTime >= Constants.HOSPITAL_RECEIVE_TIME) {
             //如果患者已经确诊，且（世界时刻-确诊时刻）大于医院响应时间，即医院准备好病床了，可以抬走了
             val bed = Hospital.hospital.pickBed()//查找空床位
-            if (bed == null) {
-                //没有床位了，报告需求床位数
-
-            } else {
+            if (bed != null) {
                 //安置病人
                 useBed = bed
-                state = State.FREEZE
+                freeze()
                 x = bed.x
                 y = bed.y
                 bed.isEmpty = false
             }
+//            else {
+//                //没有床位了，报告需求床位数
+//            }
         }
 
         //处理病死者
         if ((state == State.CONFIRMED || state == State.FREEZE) && MyPanel.worldTime >= dieMoment && dieMoment > 0) {
-            state = State.DEATH//患者死亡
-            Hospital.hospital.returnBed(useBed)//归还床位
+            val fatal: Float = Random().nextFloat()
+            if(fatal < Constants.FATALITY_RATE) {
+                state = State.DEATH//患者死亡
+                Hospital.hospital.returnBed(useBed)//归还床位
+                useBed = null
+                if (Hospital.hospital.inHospital(x, y)) {
+                    x = -10
+                    y = -10
+                }
+            }
         }
 
         //增加一个正态分布用于潜伏期内随机发病时间
-        val stdRnShadowtime = MathUtil.stdGaussian(25.0, Constants.SHADOW_TIME / 2)
+        val stdRnShadowTime = MathUtil.stdGaussian(25.0, Constants.SHADOW_TIME / 2)
         //处理发病的潜伏期感染者
-        if (MyPanel.worldTime - infectedTime > stdRnShadowtime && state == State.SHADOW) {
+        if (MyPanel.worldTime - infectedTime > stdRnShadowTime && state == State.SHADOW) {
             state = State.CONFIRMED//潜伏者发病
             confirmedTime = MyPanel.worldTime//刷新时间
         }
@@ -183,13 +210,13 @@ class Person(private val city: City, override var x: Int, override var y: Int) :
         }
         //通过一个随机幸运值和安全距离决定感染其他人
         for (person in people) {
-            if (person.state == State.NORMAL) {
+            if (person.state != State.SHADOW && person.state != State.CONFIRMED) {
                 continue
             }
             val random = Random().nextFloat()
-            if (random < Constants.BROAD_RATE && distance(person) < SAFE_DIST) {
-                 this.beInfected()
-                break
+            if (random < Constants.BROAD_RATE && distance(person) < SAFE_DIST && person != this) {
+                this.beInfected()
+//                break
             }
         }
     }

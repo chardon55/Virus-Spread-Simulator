@@ -97,6 +97,9 @@ class Hospital private constructor(x: Int, y: Int) : Point(x, y) {
             bed.isEmpty = true
         return bed
     }
+
+    fun inHospital(x: Int, y: Int): Boolean = x >= HOSPITAL_X && x <= HOSPITAL_X + hospital.width && y >= HOSPITAL_Y && y <= HOSPITAL_Y + hospital.height
+
 }
 
 /**
@@ -138,4 +141,5 @@ class PersonPool private constructor() {
         return personList.size
     }
 
+    var RECOVERED: Int = 0
 }

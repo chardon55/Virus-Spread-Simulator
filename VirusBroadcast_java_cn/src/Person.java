@@ -181,17 +181,6 @@ public class Person extends Point {
     public void update() {
         //@TODO找时间改为状态机
 
-        if (state == State.DEATH) {
-            // 在医院内死亡
-            if (Hospital.getInstance().inHospital(getX(), getY())) {
-                // 移出视线
-                setX(-10);
-                setY(-10);
-                // Hospital.getInstance().returnBed(useBed);
-            }
-            return;
-        }
-
         if (state == State.FREEZE) {
             // 对隔离患者判断治愈成功率
             float success = new Random().nextFloat();
@@ -225,21 +214,11 @@ public class Person extends Point {
             }
         }
 
-        //处理已经确诊的感染者（即患者）
-        if (state == State.CONFIRMED && dieMoment == 0) {
-            
-        }
-
-
         if (state == State.CONFIRMED
                 && MyPanel.worldTime - confirmedTime >= Constants.HOSPITAL_RECEIVE_TIME) {
             //如果患者已经确诊，且（世界时刻-确诊时刻）大于医院响应时间，即医院准备好病床了，可以抬走了
             Bed bed = Hospital.getInstance().pickBed();//查找空床位
-            if (bed == null) {
-
-                //没有床位了，报告需求床位数
-
-            } else {
+            if (bed != null) {
                 //安置病人
                 useBed = bed;
                 freeze();
@@ -256,6 +235,11 @@ public class Person extends Point {
                 state = State.DEATH;//患者死亡
                 Hospital.getInstance().returnBed(useBed);//归还床位
                 useBed = null;
+                if (Hospital.getInstance().inHospital(getX(), getY())) {
+                    // 移出视线
+                    setX(-10);
+                    setY(-10);
+                }
             }
         }
 

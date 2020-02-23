@@ -26,9 +26,7 @@ namespace VirusBroadcast {
 			targetYU = new Random().NextGaussian(100, y);
 		}
 
-		public bool WantMove() {
-			return new Random().NextGaussian(SIGMA, Constants.MU) > 0;
-		}
+		public bool WantMove() => new Random().NextGaussian(SIGMA, Constants.MU) > 0;
 
 		public State CurState { get; set; } = State.NORMAL;
 
@@ -36,9 +34,7 @@ namespace VirusBroadcast {
 		private int confirmedTime = 0;
 		private int dieMoment = 0; // 死亡时刻，0表示未知
 
-		public bool IsInfected() {
-			return CurState.CompareTo(State.SHADOW) >= 0;
-		}
+		public bool IsInfected() => CurState.CompareTo(State.SHADOW) >= 0;
 
 		public void BeInfected() {
 			CurState = State.SHADOW;
@@ -150,21 +146,17 @@ namespace VirusBroadcast {
 				}
 			}
 
-			if (CurState == State.CONFIRMED && dieMoment == 0) {
-
-			}
-
 			if (CurState == State.CONFIRMED && MyPanel.WorldTime - confirmedTime >= Constants.HOSPITAL_RECEIVE_TIME) {
 				var bed = Hospital.Instance.PickBed();
-				if (bed is null) {
-
-				}
-				else {
+				if (!(bed is null)) {
 					useBed = bed;
 					Freeze();
 					X = bed.X;
 					Y = bed.Y;
 					bed.IsEmpty = false;
+				}
+				else {
+
 				}
 			}
 

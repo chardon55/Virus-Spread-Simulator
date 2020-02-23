@@ -1,9 +1,10 @@
+import Person.State
 import kotlin.collections.HashMap;
 
 import javax.swing.*
 import java.awt.*
+import java.util.*
 import java.util.Timer
-import java.util.TimerTask
 
 /**
  * 主面板。
@@ -14,13 +15,15 @@ import java.util.TimerTask
  * @date: 2020年02月02日 17:03
  */
 class MyPanel : JPanel(), Runnable {
-    val timer = Timer()
+    private val timer = Timer()
     companion object {
         var worldTime = 0//世界时间
+//        private val colorMap: Map<State, Color> = HashMap()
     }
     init {
         this.background = Color(0x444444)
     }
+
     internal inner class MyTimerTask : TimerTask() {
         override fun run() {
             this@MyPanel.repaint()
@@ -45,11 +48,12 @@ class MyPanel : JPanel(), Runnable {
 //        if (people.size == 0) return
         for (person in people) {
             when (person.state) {
-                Person.State.NORMAL -> g.color = Color(0xdddddd) //健康人
-                Person.State.SHADOW -> g.color = Color(0xffee00) //潜伏期感染者
-                Person.State.CONFIRMED -> g.color = Color(0xff0000) //确诊患者
-                Person.State.FREEZE -> g.color = Color(0x48FFFC)    //已隔离者
-                Person.State.DEATH -> g.color = Color(0x000000)     //死亡患者
+                State.NORMAL -> g.color = Color(0xdddddd) //健康人
+                State.SHADOW -> g.color = Color(0xffee00) //潜伏期感染者
+                State.CONFIRMED -> g.color = Color(0xff0000) //确诊患者
+                State.FREEZE -> g.color = Color(0x48FFFC)    //已隔离者
+                State.DEATH -> g.color = Color(0x000000)     //死亡患者
+                else -> { }
             }
             person.update()//对各种状态的市民进行不同的处理
             g.fillOval(person.x, person.y, 3, 3)
@@ -71,33 +75,33 @@ class MyPanel : JPanel(), Runnable {
 
         g.color = Color(0xdddddd)
         captionStartOffsetY += captionSize
-        g.drawString("健康者人数：" + PersonPool.personPool.getPeopleSize(Person.State.NORMAL), captionStartOffsetX, captionStartOffsetY)
+        g.drawString("健康者人数：" + PersonPool.personPool.getPeopleSize(State.NORMAL), captionStartOffsetX, captionStartOffsetY)
 
         g.color = Color(0xffee00)
         captionStartOffsetY += captionSize
-        g.drawString("潜伏期人数：" + PersonPool.personPool.getPeopleSize(Person.State.SHADOW), captionStartOffsetX, captionStartOffsetY)
+        g.drawString("潜伏期人数：" + PersonPool.personPool.getPeopleSize(State.SHADOW), captionStartOffsetX, captionStartOffsetY)
 
         g.color = Color(0xff0000)
         captionStartOffsetY += captionSize
-        g.drawString("发病者人数：" + PersonPool.personPool.getPeopleSize(Person.State.CONFIRMED), captionStartOffsetX, captionStartOffsetY)
+        g.drawString("发病者人数：" + PersonPool.personPool.getPeopleSize(State.CONFIRMED), captionStartOffsetX, captionStartOffsetY)
 
         g.color = Color(0x48FFFC)
         captionStartOffsetY += captionSize
-        g.drawString("已隔离人数：" + PersonPool.personPool.getPeopleSize(Person.State.FREEZE), captionStartOffsetX, captionStartOffsetY)
+        g.drawString("已隔离人数：" + PersonPool.personPool.getPeopleSize(State.FREEZE), captionStartOffsetX, captionStartOffsetY)
 
         g.color = Color(0x00ff00)
         captionStartOffsetY += captionSize
-        g.drawString("空余病床：" + Math.max(Constants.BED_COUNT - PersonPool.personPool.getPeopleSize(Person.State.FREEZE), 0), captionStartOffsetX, captionStartOffsetY)
+        g.drawString("空余病床：" + Math.max(Constants.BED_COUNT - PersonPool.personPool.getPeopleSize(State.FREEZE), 0), captionStartOffsetX, captionStartOffsetY)
 
         g.color = Color(0xE39476)
-        //暂定急需病床数量为 NEED = 确诊发病者数量 - 已隔离住院数量
-        val needBeds = PersonPool.personPool.getPeopleSize(Person.State.CONFIRMED) - PersonPool.personPool.getPeopleSize(Person.State.FREEZE)
+        // 急需病床数量 = 确诊发病者数量 + 已隔离住院数量 - 床位总数
+        val needBeds = PersonPool.personPool.getPeopleSize(State.CONFIRMED) + PersonPool.personPool.getPeopleSize(State.FREEZE) - Constants.BED_COUNT
         captionStartOffsetY += captionSize
         g.drawString("急需病床：" + if (needBeds > 0) needBeds else 0, captionStartOffsetX, captionStartOffsetY)
 
         g.color = Color(0xccbbcc)
         captionStartOffsetY += captionSize
-        g.drawString("病死人数：" + PersonPool.personPool.getPeopleSize(Person.State.DEATH), captionStartOffsetX, captionStartOffsetY)
+        g.drawString("病死人数：" + PersonPool.personPool.getPeopleSize(State.DEATH), captionStartOffsetX, captionStartOffsetY)
     }
 
 

@@ -27,4 +27,8 @@ object Constants {
      */
     const val CITY_WIDTH = 700
     const val CITY_HEIGHT = 800
+
+    const val SAFE_DIST = 2f
+
+    const val RECOVERY_RATE = 0.003f
 }

@@ -178,17 +178,6 @@ public class Person extends Point {
     public void update() {
         //@TODO State Machine
 
-        if (state == State.DEATH) {
-            // If died in the hospital
-            if (Hospital.getInstance().inHospital(getX(), getY())) {
-                // Move out of the world
-                setX(-10);
-                setY(-10);
-                // Hospital.getInstance().returnBed(useBed);
-            }
-            return;
-        }
-
         if (state == State.FREEZE) {
             // Calculate the success of recovery
             float success = new Random().nextFloat();
@@ -222,21 +211,11 @@ public class Person extends Point {
             }
         }
 
-        // Confirmed people
-        if (state == State.CONFIRMED && dieMoment == 0) {
-            
-        }
-
-
         if (state == State.CONFIRMED
                 && MyPanel.worldTime - confirmedTime >= Constants.HOSPITAL_RECEIVE_TIME) {
             // Isolate the sick person
             Bed bed = Hospital.getInstance().pickBed();// Select empty bed
-            if (bed == null) {
-
-                // No bed empty
-
-            } else {
+            if (bed != null) {
                 // Put sick there
                 useBed = bed;
                 freeze();
@@ -253,6 +232,12 @@ public class Person extends Point {
                 state = State.DEATH;// Die
                 Hospital.getInstance().returnBed(useBed);// Return the bed
                 useBed = null;
+
+                if (Hospital.getInstance().inHospital(getX(), getY())) {
+                    // Move out of the world
+                    setX(-10);
+                    setY(-10);
+                }
             }
         }
 
