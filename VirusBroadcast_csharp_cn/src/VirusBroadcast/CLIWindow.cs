@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace VirusBroadcast {
-    public static class CLIWindow {
+namespace VirusBroadcast
+{
+    public static class CLIWindow
+    {
 
         private static int cursor = 0;
 
@@ -12,7 +14,8 @@ namespace VirusBroadcast {
 
         private static readonly Queue<string> argQueue = new Queue<string>();
 
-        static CLIWindow() {
+        static CLIWindow()
+        {
             // 初始感染数量
             actionDict.Add("-o", e => Constants.ORIGINAL_COUNT = Convert.ToInt32(e.Dequeue()));
             actionDict.Add("--original", actionDict["-o"]);
@@ -22,19 +25,24 @@ namespace VirusBroadcast {
 
         }
 
-        public static void CliInit(string[] args) {
-            foreach (var i in args) {
+        public static void CliInit(string[] args)
+        {
+            foreach (var i in args)
+            {
                 argQueue.Enqueue(i);
             }
 
-            for(; cursor < args.Length; cursor++) {
-                if(!Regex.IsMatch(args[cursor], "-.+")) {
+            for (; cursor < args.Length; cursor++)
+            {
+                if (!Regex.IsMatch(args[cursor], "-.+"))
+                {
 
                 }
             }
         }
 
-        private static void GetHelp() {
+        private static void GetHelp()
+        {
             Console.WriteLine("瘟疫传播模拟程序");
             Console.WriteLine("----------------------------------------------------");
             Console.WriteLine("可用命令：");
@@ -51,7 +59,8 @@ namespace VirusBroadcast {
             Console.WriteLine("----------------------------------------------------");
         }
 
-        private static void ErrReport(string message) {
+        private static void ErrReport(string message)
+        {
             Console.WriteLine();
             Console.WriteLine("错误：");
             Console.WriteLine(message);

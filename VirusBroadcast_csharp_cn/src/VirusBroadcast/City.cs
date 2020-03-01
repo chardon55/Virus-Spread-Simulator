@@ -2,16 +2,19 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace VirusBroadcast {
-	public class City {
+namespace VirusBroadcast
+{
+    public class City
+    {
 
-		public int CenterX { get; set; }
+        public int CenterX { get; set; }
 
-		public int CenterY { get; set; }
+        public int CenterY { get; set; }
 
-		public City(int centerX, int centerY) {
-			CenterX = centerX;
-			CenterY = centerY;
-		}
-	}
+        public City(int centerX, int centerY)
+        {
+            CenterX = centerX;
+            CenterY = centerY;
+        }
+    }
 }
