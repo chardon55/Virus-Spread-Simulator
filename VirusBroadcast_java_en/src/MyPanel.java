@@ -123,7 +123,7 @@ public class MyPanel extends JPanel implements Runnable {
         // One person may be cured many times, which are all recorded
 
         g.setColor(new Color(0x00ff23));
-        g.drawString("Recovered Person-times: " + PersonPool.RECOVERED, captionStartOffsetX,
+        g.drawString("Recovered: " + PersonPool.RECOVERED, captionStartOffsetX,
                 captionStartOffsetY += captionSize);
         worldTime++;
     }
