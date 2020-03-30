@@ -1,6 +1,6 @@
 # 瘟疫传播模拟程序 Plague Spread Simulation Program
 
-<p align="center"><b>武汉加油！中国加油！💪</b>
+<p align="center"><b>武汉加油！中国加油！世界加油！💪</b></p>
 
 ## 简介 Introduction
 
