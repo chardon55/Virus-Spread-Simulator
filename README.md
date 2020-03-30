@@ -1,6 +1,6 @@
 # 瘟疫传播模拟程序 Plague Spread Simulation Program
 
-<p align="center"><b>Stay strong! We can contain the virus!<b></p>
+<p align="center"><b>Stay strong! We can contain the virus!</b></p>
 
 ## 简介 Introduction
 
